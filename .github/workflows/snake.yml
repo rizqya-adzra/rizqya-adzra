@@ -1,22 +1,22 @@
-name: Run Snake Animation
+name: Generate Snake Animation
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 0 * * *" # update setiap hari
+  workflow_dispatch:
 
 jobs:
-  run-snake:
+  generate:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: Platane/snk@v3
         with:
-          python-version: '3.x'
+          github_user_name: rizqya-adzra
+          outputs: dist/snake.svg
 
-      - name: Run snake animation
-        run: python snake_animation.py
+      - uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
